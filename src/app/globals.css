@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a0b;
+  --color-graphite-900: #111113;
+  --color-graphite-800: #18181b;
+  --color-graphite-700: #232327;
+  --color-line: #2a2a2e;
+  --color-gold: #c9a961;
+  --color-gold-light: #e2c88f;
+  --color-mist: #a1a1aa;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-cormorant);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Чтобы якорные ссылки не прятали заголовки под фиксированной шапкой */
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--color-ink);
+  color: #fafafa;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Появление блоков при прокрутке (см. components/Reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 1000ms var(--ease-luxe),
+    transform 1000ms var(--ease-luxe);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Фото автомобиля в hero: верх и края снимка плавно уходят в графитовый фон */
+.hero-photo-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28%);
+  mask-image: linear-gradient(to bottom, transparent, #000 28%);
+}
+
+.hero-photo-fade-mobile {
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent),
+    linear-gradient(to right, transparent, #000 3%, #000 97%, transparent);
+  mask-composite: intersect;
+}
+
+/* Появление первого экрана сразу после загрузки */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 1200ms var(--ease-luxe) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
